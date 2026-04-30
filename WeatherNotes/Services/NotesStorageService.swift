@@ -1,0 +1,89 @@
+//
+//  NotesStorageService.swift
+//  WeatherNotes
+//
+//  Created by Ivan Solohub on 30.04.2026.
+//
+
+import CoreData
+
+protocol NotesStorageServiceProtocol {
+    func saveNote(_ note: NoteItem)
+    func fetchNotes() -> [NoteItem]
+    func fetchNote(by id: UUID) -> NoteItem?
+}
+
+final class NotesStorageService: NotesStorageServiceProtocol {
+    
+    private let context: NSManagedObjectContext
+    
+    init(context: NSManagedObjectContext = CoreDataStack.shared.context) {
+        self.context = context
+    }
+    
+    func saveNote(_ note: NoteItem) {
+        let entity = NoteEntity(context: context)
+        entity.id = note.id
+        entity.noteText = note.noteText
+        entity.dateAndTime = note.dateAndTime
+        entity.location = note.location
+        entity.weatherDescription = note.weatherDescription
+        entity.weatherIcon = note.weatherIcon
+        
+        do {
+            try context.save()
+        } catch {
+            print("Failed to save note:", error.localizedDescription)
+        }
+    }
+    
+    func fetchNotes() -> [NoteItem] {
+        let request = NoteEntity.fetchRequest()
+        request.sortDescriptors = [
+            NSSortDescriptor(keyPath: \NoteEntity.dateAndTime, ascending: false)
+        ]
+        
+        do {
+            let entities = try context.fetch(request)
+            return entities.compactMap { mapToNoteItem($0) }
+        } catch {
+            print("Failed to fetch notes:", error.localizedDescription)
+            return []
+        }
+    }
+    
+    func fetchNote(by id: UUID) -> NoteItem? {
+        let request = NoteEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        request.fetchLimit = 1
+        
+        do {
+            return try context.fetch(request).first.flatMap { mapToNoteItem($0) }
+        } catch {
+            print("Failed to fetch note:", error.localizedDescription)
+            return nil
+        }
+    }
+    
+    private func mapToNoteItem(_ entity: NoteEntity) -> NoteItem? {
+        guard
+            let id = entity.id,
+            let noteText = entity.noteText,
+            let dateAndTime = entity.dateAndTime,
+            let location = entity.location,
+            let weatherDescription = entity.weatherDescription,
+            let weatherIcon = entity.weatherIcon
+        else {
+            return nil
+        }
+        
+        return NoteItem(
+            id: id,
+            noteText: noteText,
+            dateAndTime: dateAndTime,
+            location: location,
+            weatherDescription: weatherDescription,
+            weatherIcon: weatherIcon
+        )
+    }
+}
