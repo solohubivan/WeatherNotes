@@ -42,7 +42,9 @@ struct AddNoteScreenView: View {
 
                 ToolbarItem(placement: .topBarTrailing) {
                     Button("Save") {
-
+                        if !viewModel.noteTextValue.isEmpty{
+                            viewModel.saveNote()
+                        }
                     }
                     .fontWeight(.semibold)
                     .foregroundColor(.blue)

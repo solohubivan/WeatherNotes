@@ -30,12 +30,17 @@ final class AddNoteScreenViewModel {
     @ObservationIgnored
     private let weatherService: WeatherService
     
+    @ObservationIgnored
+    private let notesStorageService: NotesStorageServiceProtocol
+    
     init(
         locationManager: LocationManager? = nil,
-        weatherService: WeatherService? = nil
+        weatherService: WeatherService? = nil,
+        notesStorageService: NotesStorageServiceProtocol? = nil
     ) {
         self.locationManager = locationManager ?? LocationManager()
         self.weatherService = weatherService ?? WeatherService()
+        self.notesStorageService = notesStorageService ?? NotesStorageService()
     }
     
     var dateAndTimeText: String {
@@ -70,6 +75,22 @@ final class AddNoteScreenViewModel {
         }
         
         locationManager.requestLocation()
+    }
+    
+    func saveNote() {
+        guard !noteTextValue.trimmed.isEmpty else { return }
+        guard let weather else { return }
+        
+        let note = NoteItem(
+            id: UUID(),
+            noteText: noteTextValue.trimmed,
+            dateAndTime: createdAt,
+            location: "\(weather.name), \(weather.sys.country)",
+            weatherDescription: weather.weather.first?.description.capitalized ?? "-",
+            weatherIcon: weather.weather.first?.icon ?? "",
+        )
+        
+        notesStorageService.saveNote(note)
     }
     
     private func fetchWeather(latitude: Double, longitude: Double) async {
