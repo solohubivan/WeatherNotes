@@ -33,6 +33,7 @@ struct WeatherNotesScreenView: View {
             .navigationDestination(item: $viewModel.selectedNote) { note in
                 WeatherNoteDetailScreenView(note: note)
             }
+            .noInternetAlert()
         }
     }
     
@@ -49,7 +50,7 @@ struct WeatherNotesScreenView: View {
     
     private var mainTitleText: some View {
         HStack {
-            Text("Weather Notes")
+            Text(viewModel.mainTitleText)
                 .font(.system(size: 37, weight: .bold))
             
             Spacer()

@@ -46,6 +46,8 @@ struct AddNoteScreenView: View {
                 savedOverlay
             }
         }
+        .noInternetAlert()
+        .addNoteAlert(activeAlert: $viewModel.activeAlert)
     }
     
     // MARK: - UI components
@@ -205,9 +207,9 @@ struct AddNoteScreenView: View {
     }
     
     private func saveNote() {
-        guard !viewModel.noteTextValue.trimmed.isEmpty else { return }
+        let didSave = viewModel.saveNote()
+        guard didSave else { return }
         
-        viewModel.saveNote()
         isFocused = false
         showSavedView = true
         

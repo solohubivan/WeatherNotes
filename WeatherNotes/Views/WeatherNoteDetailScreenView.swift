@@ -9,6 +9,7 @@ import SwiftUI
 
 struct WeatherNoteDetailScreenView: View {
     
+    @Environment(NetworkMonitor.self) private var networkMonitor
     @Environment(\.dismiss) private var dismiss
     private let viewModel: WeatherNoteDetailViewModel
     
@@ -35,6 +36,7 @@ struct WeatherNoteDetailScreenView: View {
             .padding(.horizontal, 16)
         }
         .navigationBarTitleDisplayMode(.inline)
+        .noInternetAlert()
     }
     
     // MARK: - UI components
@@ -70,6 +72,7 @@ struct WeatherNoteDetailScreenView: View {
                     .frame(width: 100, height: 100)
             }
             .frame(height: 100)
+            .id(networkMonitor.imageReloadToken)
             
             VStack(alignment: .leading) {
                 Text(viewModel.temperatureText)

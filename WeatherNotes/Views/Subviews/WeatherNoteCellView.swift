@@ -9,6 +9,8 @@ import SwiftUI
 
 struct WeatherNoteCellView: View {
     
+    @Environment(NetworkMonitor.self) private var networkMonitor
+    
     private let viewModel: WeatherNoteCellViewModel
     
     init(note: NoteItem) {
@@ -57,6 +59,18 @@ struct WeatherNoteCellView: View {
             .lineLimit(1)
     }
     
+//    private var weatherIcon: some View {
+//        AsyncImage(url: viewModel.weatherIconURL) { image in
+//            image
+//                .resizable()
+//                .scaledToFit()
+//        } placeholder: {
+//            ProgressView()
+//                .progressViewStyle(.circular)
+//                .frame(width: 54, height: 54)
+//        }
+//        .frame(width: 54, height: 54)
+//    }
     private var weatherIcon: some View {
         AsyncImage(url: viewModel.weatherIconURL) { image in
             image
@@ -68,6 +82,7 @@ struct WeatherNoteCellView: View {
                 .frame(width: 54, height: 54)
         }
         .frame(width: 54, height: 54)
+        .id(networkMonitor.imageReloadToken)
     }
 }
 

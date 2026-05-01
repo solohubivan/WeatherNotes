@@ -12,6 +12,20 @@ import Observation
 @Observable
 final class AddNoteScreenViewModel {
     
+    enum ActiveAlert: Identifiable {
+        case emptyNote
+        case weatherUnavailable
+        
+        var id: String {
+            switch self {
+            case .emptyNote: return "emptyNote"
+            case .weatherUnavailable: return "weatherUnavailable"
+            }
+        }
+    }
+
+    var activeAlert: ActiveAlert?
+    
     let dateAndTimeTitleText = "Date and time:"
     let locationTitleText = "Location:"
     let weatherTitleText = "Weather:"
@@ -77,28 +91,31 @@ final class AddNoteScreenViewModel {
         locationManager.requestLocation()
     }
     
-    func saveNote() {
-        guard !noteTextValue.trimmed.isEmpty else { return }
-        guard let weather else { return }
+    func saveNote() -> Bool {
+        guard !noteTextValue.trimmed.isEmpty else {
+            activeAlert = .emptyNote
+            return false
+        }
         
         let note = NoteItem(
             id: UUID(),
             noteText: noteTextValue.trimmed,
             dateAndTime: createdAt,
-            location: "\(weather.name), \(weather.sys.country)",
-            weatherDescription: weather.weather.first?.description.capitalized ?? "-",
-            weatherIcon: weather.weather.first?.icon ?? "",
-            temperature: weather.main.temp,
-            feelsLike: weather.main.feelsLike,
-            humidity: weather.main.humidity,
-            pressure: weather.main.pressure,
-            windSpeed: weather.wind.speed,
-            visibility: weather.visibility,
-            latitude: weather.coord.lat,
-            longitude: weather.coord.lon
+            location: locationText,
+            weatherDescription: weather?.weather.first?.description.capitalized ?? "-",
+            weatherIcon: weather?.weather.first?.icon ?? "",
+            temperature: weather?.main.temp ?? 0,
+            feelsLike: weather?.main.feelsLike ?? 0,
+            humidity: weather?.main.humidity ?? 0,
+            pressure: weather?.main.pressure ?? 0,
+            windSpeed: weather?.wind.speed ?? 0,
+            visibility: weather?.visibility ?? 0,
+            latitude: weather?.coord.lat ?? 0,
+            longitude: weather?.coord.lon ?? 0
         )
         
         notesStorageService.saveNote(note)
+        return true
     }
     
     private func fetchWeather(latitude: Double, longitude: Double) async {
