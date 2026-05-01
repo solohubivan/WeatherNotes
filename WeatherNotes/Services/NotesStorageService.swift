@@ -11,6 +11,7 @@ protocol NotesStorageServiceProtocol {
     func saveNote(_ note: NoteItem)
     func fetchNotes() -> [NoteItem]
     func fetchNote(by id: UUID) -> NoteItem?
+    func deleteNote(by id: UUID)
 }
 
 final class NotesStorageService: NotesStorageServiceProtocol {
@@ -29,6 +30,7 @@ final class NotesStorageService: NotesStorageServiceProtocol {
         entity.location = note.location
         entity.weatherDescription = note.weatherDescription
         entity.weatherIcon = note.weatherIcon
+        entity.temperature = note.temperature
         
         do {
             try context.save()
@@ -65,6 +67,21 @@ final class NotesStorageService: NotesStorageServiceProtocol {
         }
     }
     
+    func deleteNote(by id: UUID) {
+        let request = NoteEntity.fetchRequest()
+        request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+        request.fetchLimit = 1
+        
+        do {
+            if let entity = try context.fetch(request).first {
+                context.delete(entity)
+                try context.save()
+            }
+        } catch {
+            print("Failed to delete note:", error.localizedDescription)
+        }
+    }
+    
     private func mapToNoteItem(_ entity: NoteEntity) -> NoteItem? {
         guard
             let id = entity.id,
@@ -83,7 +100,8 @@ final class NotesStorageService: NotesStorageServiceProtocol {
             dateAndTime: dateAndTime,
             location: location,
             weatherDescription: weatherDescription,
-            weatherIcon: weatherIcon
+            weatherIcon: weatherIcon,
+            temperature: entity.temperature
         )
     }
 }
