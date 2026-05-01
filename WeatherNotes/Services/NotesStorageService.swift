@@ -31,6 +31,13 @@ final class NotesStorageService: NotesStorageServiceProtocol {
         entity.weatherDescription = note.weatherDescription
         entity.weatherIcon = note.weatherIcon
         entity.temperature = note.temperature
+        entity.feelsLike = note.feelsLike
+        entity.humidity = Int64(note.humidity)
+        entity.pressure = Int64(note.pressure)
+        entity.windSpeed = note.windSpeed
+        entity.visibility = Int64(note.visibility)
+        entity.latitude = note.latitude
+        entity.longitude = note.longitude
         
         do {
             try context.save()
@@ -101,7 +108,14 @@ final class NotesStorageService: NotesStorageServiceProtocol {
             location: location,
             weatherDescription: weatherDescription,
             weatherIcon: weatherIcon,
-            temperature: entity.temperature
+            temperature: entity.temperature,
+            feelsLike: entity.feelsLike,
+            humidity: Int(entity.humidity),
+            pressure: Int(entity.pressure),
+            windSpeed: entity.windSpeed,
+            visibility: Int(entity.visibility),
+            latitude: entity.latitude,
+            longitude: entity.longitude
         )
     }
 }

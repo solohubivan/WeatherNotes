@@ -30,6 +30,9 @@ struct WeatherNotesScreenView: View {
             .navigationDestination(isPresented: $showAddNoteScreen) {
                 AddNoteScreenView()
             }
+            .navigationDestination(item: $viewModel.selectedNote) { note in
+                WeatherNoteDetailScreenView(note: note)
+            }
         }
     }
     
@@ -68,6 +71,9 @@ struct WeatherNotesScreenView: View {
                     .listRowInsets(EdgeInsets())
                     .padding(.horizontal, 16)
                     .padding(.vertical, 8)
+                    .onTapGesture {
+                        viewModel.selectedNote = note
+                    }
                     .swipeActions(edge: .trailing) {
                         buttonDelete(for: note)
                     }
