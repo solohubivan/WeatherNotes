@@ -15,11 +15,9 @@ struct WeatherNotesScreenView: View {
     var body: some View {
         NavigationStack {
             ZStack {
-                Color.addNoteBackground.ignoresSafeArea()
-
+                CloudySkyBackgroundView()
                 notesList
             }
-            
             .onAppear {
                 viewModel.fetchNotes()
             }
@@ -78,6 +76,7 @@ struct WeatherNotesScreenView: View {
         .listStyle(.plain)
         .scrollContentBackground(.hidden)
         .scrollIndicators(.hidden)
+        .background(Color.clear)
     }
     
     private func buttonDelete(for note: NoteItem) -> some View {

@@ -16,7 +16,7 @@ struct AddNoteScreenView: View {
     
     var body: some View {
         ZStack {
-            Color.addNoteBackground.ignoresSafeArea()
+            CloudySkyBackgroundView()
             
             VStack(spacing: 25) {
                 noteTextView
