@@ -18,12 +18,14 @@ struct AddNoteScreenView: View {
         ZStack {
             CloudySkyBackgroundView()
             
-            VStack(spacing: 25) {
-                noteTextView
-                noteProperties
-                Spacer()
+            ScrollView(.vertical, showsIndicators: false) {
+                VStack {
+                    noteTextView
+                    noteProperties
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 20)
             }
-            .padding(16)
         }
         .contentShape(Rectangle())
         .onTapGesture {
@@ -36,11 +38,7 @@ struct AddNoteScreenView: View {
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Save") {
-                    saveNote()
-                }
-                .fontWeight(.semibold)
-                .foregroundColor(.blue)
+                buttonSave
             }
         }
         .overlay {
@@ -51,6 +49,14 @@ struct AddNoteScreenView: View {
     }
     
     // MARK: - UI components
+    private var buttonSave: some View {
+        Button("Save") {
+            saveNote()
+        }
+        .fontWeight(.semibold)
+        .foregroundColor(.blue)
+    }
+    
     private var noteTextView: some View {
         ZStack(alignment: .topLeading) {
             TextEditor(text: $viewModel.noteTextValue)
@@ -77,10 +83,10 @@ struct AddNoteScreenView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 160)
+        .frame(height: 180)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color(.systemBackground))
+                .fill(Color(.systemBackground).opacity(0.5))
                 .shadow(color: .black.opacity(0.3), radius: 4)
         )
         .overlay(
@@ -136,7 +142,7 @@ struct AddNoteScreenView: View {
         .frame(maxWidth: .infinity)
         .background(
             RoundedRectangle(cornerRadius: 12)
-                .fill(Color(.systemBackground))
+                .fill(Color(.systemBackground).opacity(0.5))
                 .shadow(color: .black.opacity(0.3), radius: 4)
         )
         .overlay(
@@ -187,12 +193,12 @@ struct AddNoteScreenView: View {
                 .foregroundColor(iconColor)
             
             Text(title)
-                .font(.system(size: 17, weight: .regular))
+                .font(.system(size: 17, weight: .medium))
             
             Spacer()
             
             Text(value)
-                .font(.system(size: 17, weight: .regular))
+                .font(.system(size: 17, weight: .medium))
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 20)
