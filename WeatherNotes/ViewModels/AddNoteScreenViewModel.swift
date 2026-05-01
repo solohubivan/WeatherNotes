@@ -88,7 +88,14 @@ final class AddNoteScreenViewModel {
             location: "\(weather.name), \(weather.sys.country)",
             weatherDescription: weather.weather.first?.description.capitalized ?? "-",
             weatherIcon: weather.weather.first?.icon ?? "",
-            temperature: weather.main.temp
+            temperature: weather.main.temp,
+            feelsLike: weather.main.feelsLike,
+            humidity: weather.main.humidity,
+            pressure: weather.main.pressure,
+            windSpeed: weather.wind.speed,
+            visibility: weather.visibility,
+            latitude: weather.coord.lat,
+            longitude: weather.coord.lon
         )
         
         notesStorageService.saveNote(note)

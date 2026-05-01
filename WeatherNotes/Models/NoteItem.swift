@@ -15,4 +15,11 @@ struct NoteItem: Identifiable, Hashable {
     let weatherDescription: String
     let weatherIcon: String
     let temperature: Double
+    let feelsLike: Double
+    let humidity: Int
+    let pressure: Int
+    let windSpeed: Double
+    let visibility: Int
+    let latitude: Double
+    let longitude: Double
 }

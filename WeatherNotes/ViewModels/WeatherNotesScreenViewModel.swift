@@ -13,6 +13,7 @@ import Observation
 final class WeatherNotesScreenViewModel {
     
     var notes: [NoteItem] = []
+    var selectedNote: NoteItem?
     
     @ObservationIgnored
     private let notesStorageService: NotesStorageServiceProtocol

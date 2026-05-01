@@ -32,7 +32,7 @@ struct WeatherNoteCellView: View {
         .padding(.vertical, 15)
         .background(
             RoundedRectangle(cornerRadius: 10)
-                .fill(Color(.systemBackground).opacity(0.8))
+                .fill(Color.noteCellBackground)
                 .shadow(color: .black.opacity(0.3), radius: 3)
         )
     }

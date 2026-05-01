@@ -215,6 +215,5 @@ struct AddNoteScreenView: View {
 #Preview {
     NavigationStack {
         AddNoteScreenView()
-    }
-    
+    }    
 }
