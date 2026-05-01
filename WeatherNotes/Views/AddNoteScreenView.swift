@@ -9,12 +9,14 @@ import SwiftUI
 
 struct AddNoteScreenView: View {
     
-    @State private var viewModel = AddNoteScreenViewModel()
+    @Environment(\.dismiss) private var dismiss
     @FocusState private var isFocused: Bool
+    @State private var viewModel = AddNoteScreenViewModel()
+    @State private var showSavedView = false
     
     var body: some View {
         ZStack {
-            Color.addNoteBackground.ignoresSafeArea()
+            CloudySkyBackgroundView()
             
             VStack(spacing: 25) {
                 noteTextView
@@ -31,25 +33,21 @@ struct AddNoteScreenView: View {
             viewModel.loadWeatherForCurrentLocation()
         }
         .navigationTitle("New note")
-            .navigationBarTitleDisplayMode(.inline)
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    Button("Cancel") {
-                        
-                    }
-                    .foregroundColor(.blue)
+        .navigationBarTitleDisplayMode(.inline)
+        .toolbar {
+            ToolbarItem(placement: .topBarTrailing) {
+                Button("Save") {
+                    saveNote()
                 }
-
-                ToolbarItem(placement: .topBarTrailing) {
-                    Button("Save") {
-                        if !viewModel.noteTextValue.isEmpty{
-                            viewModel.saveNote()
-                        }
-                    }
-                    .fontWeight(.semibold)
-                    .foregroundColor(.blue)
-                }
+                .fontWeight(.semibold)
+                .foregroundColor(.blue)
             }
+        }
+        .overlay {
+            if showSavedView {
+                savedOverlay
+            }
+        }
     }
     
     // MARK: - UI components
@@ -79,7 +77,7 @@ struct AddNoteScreenView: View {
             }
         }
         .frame(maxWidth: .infinity)
-        .frame(height: 200)
+        .frame(height: 160)
         .background(
             RoundedRectangle(cornerRadius: 12)
                 .fill(Color(.systemBackground))
@@ -154,6 +152,29 @@ struct AddNoteScreenView: View {
             .padding(.horizontal, 16)
     }
     
+    private var savedOverlay: some View {
+        ZStack {
+            Color.black.opacity(0.25)
+                .ignoresSafeArea()
+            
+            VStack(spacing: 16) {
+                Image(systemName: "checkmark.circle.fill")
+                    .font(.system(size: 70))
+                    .foregroundColor(.green)
+                
+                Text("Saved!")
+                    .font(.system(size: 28, weight: .bold))
+            }
+            .padding(32)
+            .background(
+                RoundedRectangle(cornerRadius: 20)
+                    .fill(Color(.systemBackground))
+                    .shadow(color: .black.opacity(0.2), radius: 10)
+            )
+        }
+    }
+    
+    // MARK: - Private helpers
     private func infoRow(
         icon: String,
         title: String,
@@ -175,6 +196,19 @@ struct AddNoteScreenView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 20)
+    }
+    
+    private func saveNote() {
+        guard !viewModel.noteTextValue.trimmed.isEmpty else { return }
+        
+        viewModel.saveNote()
+        isFocused = false
+        showSavedView = true
+        
+        Task {
+            try? await Task.sleep(for: .seconds(1))
+            dismiss()
+        }
     }
 }
 

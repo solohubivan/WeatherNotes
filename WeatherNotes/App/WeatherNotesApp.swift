@@ -11,8 +11,7 @@ import SwiftUI
 struct WeatherNotesApp: App {
     var body: some Scene {
         WindowGroup {
-//            ContentView()
-            AddNoteScreenView()
+            WeatherNotesScreenView()
         }
     }
 }
