@@ -3,17 +3,29 @@
 //  WeatherNotes
 //
 //  Created by Ivan Solohub on 30.04.2026.
-//
 
 import Foundation
 
 final class WeatherService {
     
-    private enum WeatherServiceError: Error {
+    enum WeatherServiceError: LocalizedError {
         case invalidURL
         case invalidResponse
         case badStatusCode(Int)
         case decodingError
+        
+        var errorDescription: String? {
+            switch self {
+            case .invalidURL:
+                return "Invalid weather request URL."
+            case .invalidResponse:
+                return "Invalid server response."
+            case .badStatusCode(let code):
+                return "Weather service returned bad response. Code: \(code)"
+            case .decodingError:
+                return "Failed to decode weather data."
+            }
+        }
     }
     
     private let apiKey = "515fe6b9d0a1c97ce56f86231fdf5a97"
@@ -35,6 +47,10 @@ final class WeatherService {
             throw WeatherServiceError.badStatusCode(httpResponse.statusCode)
         }
         
-        return try JSONDecoder().decode(WeatherResponse.self, from: data)
+        do {
+            return try JSONDecoder().decode(WeatherResponse.self, from: data)
+        } catch {
+            throw WeatherServiceError.decodingError
+        }
     }
 }

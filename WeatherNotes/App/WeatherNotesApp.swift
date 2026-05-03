@@ -9,9 +9,16 @@ import SwiftUI
 
 @main
 struct WeatherNotesApp: App {
+    
+    @State private var networkMonitor = NetworkMonitor()
+    
     var body: some Scene {
         WindowGroup {
             WeatherNotesScreenView()
+                .environment(networkMonitor)
+                .onAppear {
+                    networkMonitor.startMonitoring()
+                }
         }
     }
 }

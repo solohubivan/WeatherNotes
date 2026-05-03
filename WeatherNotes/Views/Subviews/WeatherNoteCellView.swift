@@ -9,6 +9,8 @@ import SwiftUI
 
 struct WeatherNoteCellView: View {
     
+    @Environment(NetworkMonitor.self) private var networkMonitor
+    
     private let viewModel: WeatherNoteCellViewModel
     
     init(note: NoteItem) {
@@ -68,6 +70,7 @@ struct WeatherNoteCellView: View {
                 .frame(width: 54, height: 54)
         }
         .frame(width: 54, height: 54)
+        .id(networkMonitor.imageReloadToken)
     }
 }
 

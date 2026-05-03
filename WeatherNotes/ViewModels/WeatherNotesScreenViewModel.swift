@@ -15,6 +15,8 @@ final class WeatherNotesScreenViewModel {
     var notes: [NoteItem] = []
     var selectedNote: NoteItem?
     
+    let mainTitleText: String = "Weather Notes"
+    
     @ObservationIgnored
     private let notesStorageService: NotesStorageServiceProtocol
     
