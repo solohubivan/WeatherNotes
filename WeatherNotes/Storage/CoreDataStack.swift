@@ -35,7 +35,7 @@ final class CoreDataStack {
         do {
             try context.save()
         } catch {
-            print("Core Data save error:", error.localizedDescription)
+            _ = error
         }
     }
 }

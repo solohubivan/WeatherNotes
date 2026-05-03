@@ -42,7 +42,7 @@ final class NotesStorageService: NotesStorageServiceProtocol {
         do {
             try context.save()
         } catch {
-            print("Failed to save note:", error.localizedDescription)
+            _ = error
         }
     }
     
@@ -56,7 +56,6 @@ final class NotesStorageService: NotesStorageServiceProtocol {
             let entities = try context.fetch(request)
             return entities.compactMap { mapToNoteItem($0) }
         } catch {
-            print("Failed to fetch notes:", error.localizedDescription)
             return []
         }
     }
@@ -69,7 +68,6 @@ final class NotesStorageService: NotesStorageServiceProtocol {
         do {
             return try context.fetch(request).first.flatMap { mapToNoteItem($0) }
         } catch {
-            print("Failed to fetch note:", error.localizedDescription)
             return nil
         }
     }
@@ -85,7 +83,7 @@ final class NotesStorageService: NotesStorageServiceProtocol {
                 try context.save()
             }
         } catch {
-            print("Failed to delete note:", error.localizedDescription)
+            _ = error
         }
     }
     
