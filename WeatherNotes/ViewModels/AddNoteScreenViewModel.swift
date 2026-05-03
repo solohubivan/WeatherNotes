@@ -15,11 +15,13 @@ final class AddNoteScreenViewModel {
     enum ActiveAlert: Identifiable {
         case emptyNote
         case weatherUnavailable
+        case locationAccessDenied
         
         var id: String {
             switch self {
             case .emptyNote: return "emptyNote"
             case .weatherUnavailable: return "weatherUnavailable"
+            case .locationAccessDenied: return "locationAccessDenied"
             }
         }
     }
@@ -94,6 +96,11 @@ final class AddNoteScreenViewModel {
     func saveNote() -> Bool {
         guard !noteTextValue.trimmed.isEmpty else {
             activeAlert = .emptyNote
+            return false
+        }
+        
+        guard !locationManager.locationAccessDenied else {
+            activeAlert = .locationAccessDenied
             return false
         }
         

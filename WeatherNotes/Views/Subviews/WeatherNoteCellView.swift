@@ -59,18 +59,6 @@ struct WeatherNoteCellView: View {
             .lineLimit(1)
     }
     
-//    private var weatherIcon: some View {
-//        AsyncImage(url: viewModel.weatherIconURL) { image in
-//            image
-//                .resizable()
-//                .scaledToFit()
-//        } placeholder: {
-//            ProgressView()
-//                .progressViewStyle(.circular)
-//                .frame(width: 54, height: 54)
-//        }
-//        .frame(width: 54, height: 54)
-//    }
     private var weatherIcon: some View {
         AsyncImage(url: viewModel.weatherIconURL) { image in
             image

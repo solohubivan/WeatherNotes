@@ -43,9 +43,6 @@ struct NoInternetAlertModifier: ViewModifier {
     }
 }
 
-
-
-
 struct AddNoteAlertModifier: ViewModifier {
     
     @Binding var activeAlert: AddNoteScreenViewModel.ActiveAlert?
@@ -67,8 +64,26 @@ struct AddNoteAlertModifier: ViewModifier {
                         message: Text("Weather data is required to save a note. Please check your internet connection and try again."),
                         dismissButton: .default(Text("OK"))
                     )
+                    
+                case .locationAccessDenied:
+                    return Alert(
+                        title: Text("Location Access Required"),
+                        message: Text("Location access is required to attach weather data to your note."),
+                        primaryButton: .cancel(Text("Cancel")),
+                        secondaryButton: .default(Text("Settings")) {
+                            openAppSettings()
+                        }
+                    )
                 }
             }
+    }
+    
+    private func openAppSettings() {
+        guard let url = URL(string: UIApplication.openSettingsURLString) else { return }
+        
+        if UIApplication.shared.canOpenURL(url) {
+            UIApplication.shared.open(url)
+        }
     }
 }
 
